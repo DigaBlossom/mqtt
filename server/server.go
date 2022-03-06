@@ -74,7 +74,7 @@ func New() *Server {
 			Version: Version,
 			Started: time.Now().Unix(),
 		},
-		sysTicker: time.NewTicker(SysTopicInterval * time.Millisecond),
+		// sysTicker: time.NewTicker(SysTopicInterval * time.Millisecond),
 		inline: inlineMessages{
 			done: make(chan bool),
 			pub:  make(chan packets.Packet, 1024),
@@ -133,23 +133,29 @@ func (s *Server) Serve() error {
 	go s.eventLoop()                            // spin up event loop for issuing $SYS values and closing server.
 	go s.inlineClient()                         // spin up inline client for direct message publishing.
 	s.Listeners.ServeAll(s.EstablishConnection) // start listening on all listeners.
-	s.publishSysTopics()                        // begin publishing $SYS system values.
+	// s.publishSysTopics()                        // begin publishing $SYS system values.
 
 	return nil
 }
 
 // eventLoop loops forever, running various server processes at different intervals.
 func (s *Server) eventLoop() {
-	for {
-		select {
-		case <-s.done:
-			s.sysTicker.Stop()
-			close(s.inline.done)
-			return
-		case <-s.sysTicker.C:
-			s.publishSysTopics()
+
+	<-s.done
+	close(s.inline.done)
+
+	/*
+		for {
+			select {
+			case <-s.done:
+				s.sysTicker.Stop()
+				close(s.inline.done)
+				return
+			case <-s.sysTicker.C:
+				s.publishSysTopics()
+			}
 		}
-	}
+	*/
 }
 
 // inlineClient loops forever, sending directly-published messages
