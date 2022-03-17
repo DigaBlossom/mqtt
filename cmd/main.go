@@ -46,13 +46,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	/*
-		stats := listeners.NewHTTPStats("stats", *infoAddr)
-		err = server.AddListener(stats, nil)
-		if err != nil {
-			log.Fatal(err)
-		}
-	*/
+	stats := listeners.NewHTTPStats("stats", *infoAddr)
+	err = server.AddListener(stats, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	go server.Serve()
 	fmt.Println(aurora.BgMagenta("  Started!  "))

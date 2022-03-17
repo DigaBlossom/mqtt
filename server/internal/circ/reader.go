@@ -19,7 +19,7 @@ func NewReader(size, block int) *Reader {
 	}
 }
 
-// NewReaderFromSlice returns a new Circular Reader using a pre-exising
+// NewReaderFromSlice returns a new Circular Reader using a pre-existing
 // byte slice.
 func NewReaderFromSlice(block int, p []byte) *Reader {
 	b := NewBufferFromSlice(block, p)
@@ -60,7 +60,7 @@ func (b *Reader) ReadFrom(r io.Reader) (total int64, err error) {
 		n, err := r.Read(b.buf[start:end])
 		total += int64(n) // incr total bytes read.
 		if err != nil {
-			return total, nil
+			return total, err
 		}
 
 		// Move the head forward however many bytes were read.
